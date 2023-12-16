@@ -1,20 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from "react";
+import { Button, ScrollView } from "react-native";
+import { Text, View } from "react-native";
 
-export default function App() {
+import * as motelService from "~/service/motelService";
+
+function App() {
+  const [data, setData] = useState([]);
+
+  const loadData = () => {
+    motelService
+      .getAll()
+      .then((motel) => setData(motel))
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    loadData;
+  }, []);
+  console.log(data);
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ScrollView>
+      <View>
+        {data.map((motel) => (
+          <Text key={motel.id}>{motel.title}</Text>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
