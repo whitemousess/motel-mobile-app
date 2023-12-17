@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "motel-mobile-app",
+    "slug": "motel-mobile-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.chuotbach2002.motelmobileapp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.chuotbach2002.motelmobileapp"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9c906217-3e76-4122-932c-46d61ea26437"
+      }
+    }
+  }
+}
