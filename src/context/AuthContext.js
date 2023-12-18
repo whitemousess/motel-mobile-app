@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 import * as authService from "~/service/authService";
 
@@ -29,7 +30,18 @@ export const AuthProvider = ({ children }) => {
     authService
       .register({ data })
       .then((res) => {
-        console.log(res);
+        if (res.data) {
+          Toast.show({
+            type: "success",
+            text1: "Đăng ký thành công",
+          });
+        } else if (res.response.status === 409) {
+          Toast.show({
+            type: "error",
+            text1: "không thể đăng ký",
+            text2: "Tài khoản đã tồn tại",
+          });
+        }
         setIsLoading(false);
       })
       .catch((err) => console.log(err));

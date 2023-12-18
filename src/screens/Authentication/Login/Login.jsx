@@ -58,7 +58,13 @@ function Login({ navigation }) {
             label="Tài khoản ..."
             value={data.username}
             onChange={(text) => handleChange("username", text)}
-            icon={<MaterialIcons name="person" size={28} color="#666" />}
+            icon={
+              <MaterialIcons
+                name="person"
+                size={28}
+                color={`${invalidFields["username"] ? "red" : "#666"}`}
+              />
+            }
             isError={invalidFields["username"]}
           />
 
@@ -68,7 +74,11 @@ function Login({ navigation }) {
             value={data.password}
             onChange={(text) => handleChange("password", text)}
             icon={
-              <Ionicons name="ios-lock-closed-outline" size={20} color="#666" />
+              <Ionicons
+                name="ios-lock-closed-outline"
+                size={20}
+                color={`${invalidFields["password"] ? "red" : "#666"}`}
+              />
             }
             isError={invalidFields["password"]}
           />

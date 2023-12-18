@@ -60,7 +60,13 @@ function Register({ navigation }) {
             label="Tài khoản ..."
             value={data.username}
             onChange={(text) => handleChange("username", text)}
-            icon={<MaterialIcons name="person" size={28} color="#666" />}
+            icon={
+              <MaterialIcons
+                name="person"
+                size={28}
+                color={`${invalidFields["username"] ? "red" : "#666"}`}
+              />
+            }
             isError={invalidFields["username"]}
           />
 
@@ -70,7 +76,11 @@ function Register({ navigation }) {
             value={data.password}
             onChange={(text) => handleChange("password", text)}
             icon={
-              <Ionicons name="ios-lock-closed-outline" size={20} color="#666" />
+              <Ionicons
+                name="ios-lock-closed-outline"
+                size={20}
+                color={`${invalidFields["password"] ? "red" : "#666"}`}
+              />
             }
             isError={invalidFields["password"]}
           />
@@ -79,7 +89,13 @@ function Register({ navigation }) {
             label="Tên người dùng ..."
             value={data.fullName}
             onChange={(text) => handleChange("fullName", text)}
-            icon={<MaterialIcons name="person" size={28} color="#666" />}
+            icon={
+              <MaterialIcons
+                name="person"
+                size={28}
+                color={`${invalidFields["fullName"] ? "red" : "#666"}`}
+              />
+            }
             isError={invalidFields["fullName"]}
           />
 
@@ -89,7 +105,11 @@ function Register({ navigation }) {
             onChange={(text) => handleChange("email", text)}
             keyboardType="email-address"
             icon={
-              <MaterialIcons name="alternate-email" size={28} color="#666" />
+              <MaterialIcons
+                name="alternate-email"
+                size={28}
+                color={`${invalidFields["email"] ? "red" : "#666"}`}
+              />
             }
             isError={invalidFields["email"]}
           />
@@ -98,7 +118,13 @@ function Register({ navigation }) {
             label="Địa chỉ ..."
             value={data.address}
             onChange={(text) => handleChange("address", text)}
-            icon={<MaterialIcons name="home" size={28} color="#666" />}
+            icon={
+              <MaterialIcons
+                name="home"
+                size={28}
+                color={`${invalidFields["address"] ? "red" : "#666"}`}
+              />
+            }
             isError={invalidFields["address"]}
           />
 

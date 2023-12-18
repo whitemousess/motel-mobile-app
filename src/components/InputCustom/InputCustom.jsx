@@ -43,6 +43,7 @@ function InputCustom({
         onChangeText={onChange}
         placeholder={label}
         secureTextEntry={password}
+        autoCapitalize="none"
         placeholderTextColor={isError ? "#F24C3D" : "#ccc"}
         style={{
           flex: 1,

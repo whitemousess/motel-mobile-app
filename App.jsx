@@ -3,11 +3,9 @@ import AppNav from "~/navigation/AppNav";
 
 function App() {
   return (
-    <>
-      <AuthProvider>
-        <AppNav />
-      </AuthProvider>
-    </>
+    <AuthProvider>
+      <AppNav />
+    </AuthProvider>
   );
 }
 
