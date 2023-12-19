@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { ScrollView } from "react-native";
+import MotelItem from "./MotelItem";
 
 function motelCard({ data }) {
   return (
-    <View>
+    <ScrollView>
       {data.map((motel) => (
-        <Text key={motel._id}>{motel.title}</Text>
+        <MotelItem key={motel._id} data={motel} />
       ))}
-    </View>
+    </ScrollView>
   );
 }
 

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native"; // Import useNavigation
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 import * as provinceService from "~/service/provinceService";
 
-function SelectProvince() {
+function SelectProvince({ iconClear }) {
   const navigation = useNavigation();
   const [province, setProvince] = useState([]);
   const [district, setDistrict] = useState([]);
@@ -22,11 +22,28 @@ function SelectProvince() {
   });
 
   const onSubmit = () => {
-    navigation.navigate("Explore", {
-      selectedProvince: data.province.split(",")[1],
-      selectedDistrict: data.district,
-    });
+    if (data.province !== "" && data.district !== "") {
+      const convertData = () => {
+        if (Array.isArray(data.province)) {
+          return data.province[1];
+        } else {
+          return data.province.split(",")[1];
+        }
+      };
+      navigation.navigate("Explore", {
+        selectedProvince: convertData(),
+        selectedDistrict: data.district,
+      });
+    }
     setModalVisible(false);
+  };
+
+  const clearSelect = () => {
+    navigation.navigate("Explore", {
+      selectedProvince: "",
+      selectedDistrict: "",
+      reloadKey: Date.now(),
+    });
   };
 
   useEffect(() => {
@@ -42,8 +59,16 @@ function SelectProvince() {
 
   useEffect(() => {
     if (data.province) {
+      const convertData = () => {
+        if (Array.isArray(data.province)) {
+          return data.province[0];
+        } else {
+          return data.province.split(",")[0];
+        }
+      };
+
       provinceService
-        .getDistrict(data.province[0])
+        .getDistrict(convertData())
         .then((result) => {
           setDistrict(result.districts);
         })
@@ -62,10 +87,19 @@ function SelectProvince() {
   };
 
   return (
-    <View style={{ marginLeft: 10, marginRight: 10 }}>
+    <View
+      style={{
+        marginLeft: 10,
+        marginRight: 10,
+        flexDirection: "row",
+        borderWidth: 1,
+        borderRadius: 50,
+        borderColor: "rgba(0, 0, 0,0.1)",
+      }}
+    >
       <TouchableOpacity
         style={{
-          width: "100%",
+          width: "80%",
           height: 55,
           flexDirection: "row",
           alignItems: "center",
@@ -79,6 +113,24 @@ function SelectProvince() {
           <Text style={{ color: "#717171" }}>Tỉnh , thành phố</Text>
         </View>
       </TouchableOpacity>
+
+      {iconClear && (
+        <TouchableOpacity
+          style={{
+            width: "20%",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={clearSelect}
+        >
+          <MaterialCommunityIcons
+            name="delete-sweep-outline"
+            size={28}
+            color="black"
+          />
+        </TouchableOpacity>
+      )}
 
       <Modal animationType="fade" transparent={true} visible={modalVisible}>
         <View
@@ -103,7 +155,7 @@ function SelectProvince() {
 
             <Picker
               selectedValue={data.province}
-              itemStyle={{ height: 60 }}
+              itemStyle={{ height: 150 }}
               onValueChange={(value) => handleSelect("province", value)}
             >
               <Picker.Item label="Chọn tỉnh thành" value="" />
@@ -118,9 +170,10 @@ function SelectProvince() {
 
             <Picker
               selectedValue={data.district}
-              itemStyle={{ height: 60 }}
+              itemStyle={{ height: 100 }}
               onValueChange={(value) => handleSelect("district", value)}
             >
+              <Picker.Item label="Chọn quận huyện" value="" />
               {district.map((dataDistrict) => (
                 <Picker.Item
                   key={dataDistrict.code}

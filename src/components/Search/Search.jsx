@@ -1,11 +1,11 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 
 import SelectProvince from "./SelectProvince";
 
-function Search() {
+function Search({ iconClear }) {
   return (
-    <View style={{marginTop: 20 }}>
-      <SelectProvince />
+    <View style={{ marginTop: 20}}>
+      <SelectProvince iconClear={iconClear} />
     </View>
   );
 }
