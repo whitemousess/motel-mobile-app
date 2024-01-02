@@ -1,13 +1,24 @@
-import { ScrollView } from "react-native";
+import { View } from "react-native";
 import MotelItem from "./MotelItem";
+import ClientEmpty from "../ClientEmpty";
 
-function motelCard({ data }) {
+function motelCard({ data, refreshing }) {
+  if (data && data.length == 0) {
+    return (
+      <ClientEmpty
+        title="Không có thông tin trọ"
+        description="Không có trọ nào"
+      />
+    );
+  }
+
   return (
-    <ScrollView>
-      {data.map((motel) => (
-        <MotelItem key={motel._id} data={motel} />
-      ))}
-    </ScrollView>
+    <View>
+      {data &&
+        data.map((motel) => (
+          <MotelItem key={motel._id} data={motel} refreshing={refreshing} />
+        ))}
+    </View>
   );
 }
 

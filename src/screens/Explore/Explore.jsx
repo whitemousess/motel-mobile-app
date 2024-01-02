@@ -1,11 +1,17 @@
-import { useEffect, useState } from "react";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useCallback, useEffect, useState } from "react";
+import { useRoute, useFocusEffect } from "@react-navigation/native";
 
 import SafeView from "~/components/SafeView";
-import Search from "~/components/Search/Search";
+import Search from "~/components/Search";
 import MotelCard from "~/components/MotelCard";
 import * as motelService from "~/service/motelService";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 function Explore() {
   const route = useRoute();
@@ -13,12 +19,22 @@ function Explore() {
   const [data, setData] = useState([]);
   const [type, setType] = useState("");
   const [dataSelect, setDataSelect] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const selectedProvince = route.params?.selectedProvince || "";
   const selectedDistrict = route.params?.selectedDistrict || "";
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      fetch();
+    }, 1000);
+  }, []);
+
   useEffect(() => {
     setType("");
+    onRefresh();
   }, [route.params?.reloadKey]);
 
   const fetch = () => {
@@ -42,9 +58,11 @@ function Explore() {
     }
   }, [type, selectedProvince, selectedDistrict]);
 
-  useEffect(() => {
-    fetch();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetch();
+    }, [])
+  );
 
   return (
     <SafeView>
@@ -100,7 +118,13 @@ function Explore() {
           </TouchableOpacity>
         </View>
 
-        <MotelCard data={data} />
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <MotelCard data={data} refreshing={refreshing} />
+        </ScrollView>
       </View>
     </SafeView>
   );

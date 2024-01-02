@@ -1,26 +1,35 @@
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 
 import * as favoriteService from "~/service/favoriteService";
 import { useEffect, useState } from "react";
 
-function MotelItem({ data }) {
+function MotelItem({ data, refreshing }) {
+  const navigation = useNavigation();
   const [isFavorite, setIsFavorite] = useState(false);
 
-  useEffect(() => {
+  const fetchFavorite = () => {
     favoriteService
       .getAllFavorite()
       .then((res) => {
-        res.data.map((favorite) => {
-          if (favorite._id === data._id) {
-            setIsFavorite(true);
-          }
-        });
+        const favorite = res.data.filter(
+          (favorite) => favorite._id === data._id
+        );
+        if (favorite.length > 0) {
+          setIsFavorite(true);
+        } else {
+          setIsFavorite(false);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  };
+
+  useEffect(() => {
+      fetchFavorite();
+  }, [refreshing]);
 
   const addFavorite = (id) => {
     if (!isFavorite) {
@@ -37,11 +46,15 @@ function MotelItem({ data }) {
   };
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("Detail", { motelId: data._id });
+      }}
+      activeOpacity={1}
       style={{
         flexDirection: "column",
         alignItems: "center",
-        marginBottom: 16,
+        marginVertical: 8,
       }}
     >
       <View
@@ -100,10 +113,13 @@ function MotelItem({ data }) {
           }}
         >
           <Text>{data.price} VNĐ</Text>
-          <TouchableOpacity
+          <View
             style={{
+              flexDirection: "row",
+              alignItems: "center",
               borderRadius: 24,
               borderWidth: 1,
+              height: 36,
               borderColor: "#DDDDDD",
               paddingTop: 6,
               paddingBottom: 6,
@@ -113,10 +129,10 @@ function MotelItem({ data }) {
             activeOpacity={1}
           >
             <Text>Xem thông tin</Text>
-          </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

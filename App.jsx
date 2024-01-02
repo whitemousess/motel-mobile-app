@@ -1,11 +1,15 @@
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 import { AuthProvider } from "~/context/AuthContext";
 import AppNav from "~/navigation/AppNav";
 
 function App() {
   return (
-    <AuthProvider>
-      <AppNav />
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <AppNav />
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }
 

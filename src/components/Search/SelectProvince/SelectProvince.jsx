@@ -30,7 +30,7 @@ function SelectProvince({ iconClear }) {
           return data.province.split(",")[1];
         }
       };
-      navigation.navigate("Explore", {
+      navigation.navigate("Home", {
         selectedProvince: convertData(),
         selectedDistrict: data.district,
       });
@@ -39,7 +39,7 @@ function SelectProvince({ iconClear }) {
   };
 
   const clearSelect = () => {
-    navigation.navigate("Explore", {
+    navigation.navigate("Home", {
       selectedProvince: "",
       selectedDistrict: "",
       reloadKey: Date.now(),
@@ -79,8 +79,11 @@ function SelectProvince({ iconClear }) {
   }, [data.province]);
 
   const handleSelect = (key, value) => {
-    if (key === "province" && data.province !== value) {
-      setData({ province: value, district: "" });
+    if (key === "province") {
+      if (data.province !== value) {
+        setData({ province: value, district: "" });
+      }
+      console.log(data.province);
     } else {
       setData({ ...data, [key]: value });
     }

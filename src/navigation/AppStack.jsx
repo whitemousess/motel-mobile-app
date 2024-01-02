@@ -1,10 +1,10 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome, AntDesign, Feather, Entypo } from "@expo/vector-icons";
 
-import Explore from "~/screens/Explore";
-import Menu from "~/screens/Menu";
+import MenuStack from "./MenuStack";
 import Trips from "~/screens/Trips";
 import Wishlists from "~/screens/Wishlists";
+import MotelStack from "./MotelStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,7 +22,7 @@ function AppStack() {
     >
       <Tab.Screen
         name="Explore"
-        component={Explore}
+        component={MotelStack}
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ color, size }) => (
@@ -37,11 +37,7 @@ function AppStack() {
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ color, size }) => (
-            <AntDesign
-              name={"hearto"}
-              size={24}
-              color={color}
-            />
+            <AntDesign name={"hearto"} size={24} color={color} />
           ),
         }}
       />
@@ -57,8 +53,8 @@ function AppStack() {
         }}
       />
       <Tab.Screen
-        name="Menu"
-        component={Menu}
+        name="MenuStack"
+        component={MenuStack}
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ color, size }) => (

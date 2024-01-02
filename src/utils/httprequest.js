@@ -9,12 +9,12 @@ export const get = async (path, option = {}) => {
   return response.data;
 };
 
-export const post = async (path,option ={}) => {
+export const post = async (path, option = {}) => {
   const response = await httpRequest.post(path, option);
   return response.data;
-}
+};
 
-export const deleteData = async (path,option = {}) => {
-    const response = await httpRequest.delete(path, option);
-    return response.data;
-}
+export const put = (path, option = {}) => {
+  const response = httpRequest.put(path, option);
+  return response;
+};

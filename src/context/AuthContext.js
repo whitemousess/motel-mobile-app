@@ -16,11 +16,23 @@ export const AuthProvider = ({ children }) => {
     authService
       .login({ data })
       .then((res) => {
-        setToken(res.token);
-        setCurrentUser(res);
-        AsyncStorage.setItem("token", res.token);
-        AsyncStorage.setItem("currentUser", JSON.stringify(res));
-        setIsLoading(false);
+        if (res?.response?.status == 404) {
+          Toast.show({
+            type: "error",
+            text1: "Tài khoản không tồn tại",
+          });
+        } else if (res?.response?.status == 401) {
+          Toast.show({
+            type: "error",
+            text1: "Mật khẩu không chính xác",
+          });
+        } else {
+          setToken(res.token);
+          setCurrentUser(res);
+          AsyncStorage.setItem("token", res.token);
+          AsyncStorage.setItem("currentUser", JSON.stringify(res));
+          setIsLoading(false);
+        }
       })
       .catch((err) => console.log(err));
   };
