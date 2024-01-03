@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
 import ListTrips from "./ListTrips";
-import Search from "~/components/Search";
-import SafeView from "~/components/SafeView";
 import * as bookedService from "~/service/bookedService";
 
 function Trips() {
@@ -43,12 +41,7 @@ function Trips() {
       });
   };
 
-  return (
-    <SafeView>
-      <Search />
-      <ListTrips data={data} onCancel={cancel} />
-    </SafeView>
-  );
+  return <ListTrips data={data} onCancel={cancel} />;
 }
 
 export default Trips;

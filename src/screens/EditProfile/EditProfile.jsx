@@ -9,6 +9,7 @@ import {
   Keyboard,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 import InputCustom from "~/components/InputCustom";
 import ButtonCustom from "~/components/ButtonCustom";
@@ -19,10 +20,12 @@ function User() {
     password: "",
     fullName: "",
     email: "",
+    phone: "",
     address: "",
     imageUrl: "",
   });
   const [invalidFields, setInvalidFields] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetch = async () => {
     const currentUser = await AsyncStorage.getItem("currentUser");
@@ -49,18 +52,20 @@ function User() {
   };
 
   const handleData = async () => {
+    setIsLoading(true);
     const token = await AsyncStorage.getItem("token");
     const formData = new FormData();
     formData.append("password", data.password);
     formData.append("fullName", data.fullName);
     formData.append("email", data.email);
     formData.append("address", data.address);
+    formData.append("phone", data.phone);
     formData.append("imageUrl", {
       uri: data.imageUrl,
-      type: "image/jpeg", // Change to the actual image type
-      name: "image.jpg", // Change to the actual image file name
+      type: "image/png", // Change to the actual image type
+      name: "image.png", // Change to the actual image file name
     });
-    
+
     await httpRequest
       .put(`user/edit`, formData, {
         headers: {
@@ -68,23 +73,34 @@ function User() {
           "Content-Type": "multipart/form-data",
         },
       })
-      .then((aaa) => console.log(aaa))
+      .then((res) => {
+        if (res.status == 200) {
+          Toast.show({
+            type: "success",
+            text1: "Thay đổi thành công",
+          });
+          AsyncStorage.setItem("currentUser", JSON.stringify(res.data.data));
+        }
+        setIsLoading(false);
+      })
       .catch((error) => console.log(error));
   };
 
   const handleSubmit = () => {
-    let newInvalidFields = {};
+    if (!isLoading) {
+      let newInvalidFields = {};
 
-    Object.keys(data).forEach((key) => {
-      if (data[key] === null || data[key].trim() === "") {
-        newInvalidFields[key] = true;
+      Object.keys(data).forEach((key) => {
+        if (data[key] === null || data[key].trim() === "") {
+          newInvalidFields[key] = true;
+        }
+      });
+
+      if (Object.keys(newInvalidFields).length === 0) {
+        handleData();
+      } else {
+        setInvalidFields(newInvalidFields);
       }
-    });
-
-    if (Object.keys(newInvalidFields).length === 0) {
-      handleData();
-    } else {
-      setInvalidFields(newInvalidFields);
     }
   };
 
@@ -120,13 +136,23 @@ function User() {
           />
 
           <InputCustom
+            label="Số điện thoại ..."
+            value={data.phone}
+            onChange={(text) => handleChange("phone", text)}
+            keyboardType="numeric"
+            isError={invalidFields["phone"]}
+          />
+          <InputCustom
             label="Địa chỉ ..."
             value={data.address}
             onChange={(text) => handleChange("address", text)}
             isError={invalidFields["address"]}
           />
 
-          <ButtonCustom label="Thay đổi" onPress={handleSubmit} />
+          <ButtonCustom
+            label={isLoading ? "Đang Thay đổi" : "Thay đổi"}
+            onPress={handleSubmit}
+          />
         </View>
       </ScrollView>
     </TouchableWithoutFeedback>

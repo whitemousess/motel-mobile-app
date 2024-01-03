@@ -8,7 +8,7 @@ function TripItem({ data, onCancel }) {
 
   const renderLeftActions = () => {
     return (
-      <View style={{ flexDirection: "row", marginVertical: 10 }}>
+      <View style={{ flexDirection: "row" ,marginLeft: 10 }}>
         <TouchableOpacity
           style={{
             flexDirection: "row",
@@ -40,29 +40,33 @@ function TripItem({ data, onCancel }) {
   };
 
   return (
-    <Swipeable renderRightActions={renderLeftActions}>
-      <TouchableOpacity
-        style={{
-          flexDirection: "row",
-          padding: 10,
-        }}
-        activeOpacity={1}
-        onPress={() => {
+    <View style={{ marginBottom: 10 }}>
+      <Swipeable renderRightActions={renderLeftActions}>
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            backgroundColor: "white",
+            borderRadius: 10,
+            overflow: "hidden",
+          }}
+          activeOpacity={1}
+          onPress={() => {
             navigation.navigate("Detail", { motelId: data.motelId._id });
-        }}
-      >
-        <Image
-          source={{ uri: data.motelId.imageUrl[0] }}
-          style={{ width: 100, height: 100 }}
-        />
-        <View style={{ marginHorizontal: 10 }}>
-          <Text style={{ fontSize: 16, fontWeight: 500, flex: 1 }}>
-            {data.motelId.title}
-          </Text>
-          <Text style={{ marginBottom: 10 }}>{data.motelId.price} VNĐ</Text>
-        </View>
-      </TouchableOpacity>
-    </Swipeable>
+          }}
+        >
+          <Image
+            source={{ uri: data.motelId.imageUrl[0] }}
+            style={{ width: 100, height: 100 }}
+          />
+          <View style={{ marginHorizontal: 10 }}>
+            <Text style={{ fontSize: 16, fontWeight: 500, flex: 1 }}>
+              {data.motelId.title}
+            </Text>
+            <Text style={{ marginBottom: 10 }}>{data.motelId.price} VNĐ</Text>
+          </View>
+        </TouchableOpacity>
+      </Swipeable>
+    </View>
   );
 }
 

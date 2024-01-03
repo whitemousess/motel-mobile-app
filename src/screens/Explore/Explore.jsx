@@ -45,7 +45,7 @@ function Explore() {
         type: type,
       })
       .then((result) => {
-        setData(result);
+        setData(result.data);
       });
   };
 

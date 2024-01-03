@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { MaterialIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 
 import Logo from "~/components/assets/LOGO.png";
 import InputCustom from "~/components/InputCustom";
@@ -23,6 +23,7 @@ function Register({ navigation }) {
     password: "",
     fullName: "",
     email: "",
+    phone: "",
     address: "",
   });
   const [invalidFields, setInvalidFields] = useState({});
@@ -115,6 +116,21 @@ function Register({ navigation }) {
           />
 
           <InputCustom
+            label="Số điện thoại ..."
+            value={data.phone}
+            onChange={(text) => handleChange("phone", text)}
+            keyboardType="email-address"
+            icon={
+              <AntDesign
+                name="phone"
+                size={28}
+                color={`${invalidFields["phone"] ? "red" : "#666"}`}
+              />
+            }
+            isError={invalidFields["email"]}
+          />
+
+          <InputCustom
             label="Địa chỉ ..."
             value={data.address}
             onChange={(text) => handleChange("address", text)}
@@ -133,7 +149,7 @@ function Register({ navigation }) {
         <View>
           <TouchableOpacity
             onPress={() => navigation.navigate("Login")}
-            style={{ alignItems: "flex-end", marginRight: 10 }}
+            style={{ alignItems: "flex-end", marginHorizontal: 24 ,marginVertical: 20}}
           >
             <Text>Đã có tài khoản !</Text>
           </TouchableOpacity>

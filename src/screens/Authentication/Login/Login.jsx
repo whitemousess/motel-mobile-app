@@ -88,7 +88,7 @@ function Login({ navigation }) {
         <View>
           <TouchableOpacity
             onPress={() => navigation.navigate("Register")}
-            style={{ alignItems: "flex-end", marginRight: 10 }}
+            style={{ alignItems: "flex-end",  marginHorizontal: 24 ,marginVertical: 20 }}
           >
             <Text>Chưa có tài khoản ?</Text>
           </TouchableOpacity>

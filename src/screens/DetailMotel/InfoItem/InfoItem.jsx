@@ -16,7 +16,6 @@ import * as bookedService from "~/service/bookedService";
 
 function InfoItem({ data }) {
   const navigation = useNavigation();
-
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isBooked, setIsBooked] = useState(false);
@@ -24,7 +23,7 @@ function InfoItem({ data }) {
   if (data) {
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 500);
   }
 
   const fetchFavorite = () => {
@@ -45,31 +44,19 @@ function InfoItem({ data }) {
       });
   };
 
-  const fetchBooked = () => {
-    bookedService
-      .getMyBooked()
-      .then((res) => {
-        const booked = res.data.filter(
-          (booked) => booked.motelId._id === data._id
-        );
-        if (booked.length > 0) {
-          setIsBooked(true);
-        } else {
-          setIsBooked(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   useEffect(() => {
     if (!isLoading) {
       fetchFavorite();
-      fetchBooked();
     }
   }, [isLoading]);
 
+  useEffect(() => {
+    if (data.status == 0) {
+      setIsBooked(false);
+    } else {
+      setIsBooked(true);
+    }
+  }, [data]);
   const addFavorite = (id) => {
     if (!isFavorite) {
       setIsFavorite(true);
@@ -92,8 +79,13 @@ function InfoItem({ data }) {
   };
 
   if (isLoading) {
-    return <ActivityIndicator size={50} color="#333" />;
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={50} color="#333" />
+      </View>
+    );
   }
+
   return (
     <ScrollView style={{ paddingLeft: 10, paddingRight: 10 }}>
       <ImageDetail image={data.imageUrl} />
@@ -107,11 +99,9 @@ function InfoItem({ data }) {
         }}
         activeOpacity={1}
         onPress={() =>
-          console.log(
-            navigation.navigate("User", {
-              userId: data?.userId._id,
-            })
-          )
+          navigation.navigate("User", {
+            userId: data?.userId._id,
+          })
         }
       >
         <Text style={{ marginRight: 10 }}>{data.userId?.fullName}</Text>
@@ -177,7 +167,7 @@ function InfoItem({ data }) {
           borderRadius: 10,
           paddingTop: 10,
           paddingBottom: 10,
-          backgroundColor: `${isBooked ? "#16a34a" : ""}`,
+          backgroundColor: `${isBooked ? "#16a34a" : "white"}`,
         }}
         activeOpacity={1}
         onPress={() => booked(data._id)}

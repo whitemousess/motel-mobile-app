@@ -1,14 +1,9 @@
 import React, { useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, TouchableOpacity, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { EvilIcons } from "@expo/vector-icons";
 
-function UploadImage({onImageUpload}) {
+function UploadImage({ onImageUpload }) {
   const [selectImage, setSelectImage] = useState("");
 
   const TakePicture = async () => {
@@ -21,14 +16,17 @@ function UploadImage({onImageUpload}) {
 
     if (!result.canceled) {
       setSelectImage(result.assets[0].uri);
-      onImageUpload(result.assets[0].uri)
+      onImageUpload(result.assets[0].uri);
     }
   };
 
   return (
     <View style={{ alignItems: "center", marginBottom: 20 }}>
-      {selectImage ? (
-        <View>
+      <TouchableOpacity
+        onPress={TakePicture}
+        style={{ width: "100%", flexDirection: "column", alignItems: "center" }}
+      >
+        {selectImage ? (
           <Image
             source={{ uri: selectImage }}
             style={{
@@ -38,21 +36,9 @@ function UploadImage({onImageUpload}) {
               borderRadius: 100,
             }}
           />
-        </View>
-      ) : null}
-      <TouchableOpacity
-        onPress={TakePicture}
-        style={{
-          height: 50,
-          width: "60%",
-          backgroundColor: "skyblue",
-          borderRadius: 20,
-          justifyContent: "center",
-          alignItems: "center",
-          alignSelf: "center",
-        }}
-      >
-        <Text style={{ fontSize: 20 }}>Take a photo</Text>
+        ) : (
+          <EvilIcons name="image" size={100} color="black" />
+        )}
       </TouchableOpacity>
     </View>
   );

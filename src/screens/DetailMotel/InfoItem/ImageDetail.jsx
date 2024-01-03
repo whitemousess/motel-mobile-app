@@ -11,16 +11,14 @@ function ImageDetail({ image }) {
   }, [image]);
 
   return (
-    <View>
+    <View style={{ borderWidth: 1,borderColor:"#DDDDDD", borderRadius: 10, padding: 4,marginTop: 10 }}>
       {image && (
-        <View style={{ paddingTop: 10, paddingBottom: 10 }}>
           <Image
             source={{ uri: currentImage }}
             style={{ width: "100%", height: 400, borderRadius: 10 }}
           />
-        </View>
       )}
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      <ScrollView style={{marginTop:10}} horizontal={true} showsHorizontalScrollIndicator={false}>
         {image &&
           image.map((data) => (
             <TouchableOpacity

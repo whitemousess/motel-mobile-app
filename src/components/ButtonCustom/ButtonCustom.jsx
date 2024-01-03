@@ -5,11 +5,11 @@ function ButtonCustom({ label, onPress }) {
     <TouchableOpacity
       onPress={onPress}
       style={{
-        backgroundColor: "#a78bfa",
         padding: 20,
         borderRadius: 10,
-        marginBottom: 30,
+        borderWidth: 1,
       }}
+      activeOpacity={1}
     >
       <Text
         style={{

@@ -10,13 +10,12 @@ function User() {
   const route = useRoute();
   const userId = route?.params?.userId;
   const [data, setData] = useState({});
-
   useEffect(() => {
     if (userId) {
       authService
         .getUser({ userId })
         .then((user) => {
-          setData(user);
+          setData(user.data);
         })
         .catch((error) => {
           console.log(error);

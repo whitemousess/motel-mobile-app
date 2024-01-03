@@ -10,7 +10,7 @@ function DetailProfile({ data }) {
 
   useEffect(() => {
     motelService
-      .getMyMotel({ userId: data._id })
+      .getMotelUser({ userId: data._id })
       .then((motel) => setMotel(motel.data))
       .catch((error) => console.log(error));
   }, [data]);
@@ -25,6 +25,7 @@ function DetailProfile({ data }) {
             borderBottomColor: "#ccc",
             borderBottomWidth: 1,
             paddingVertical: 20,
+            marginBottom: 20
           }}
         >
           {data && (

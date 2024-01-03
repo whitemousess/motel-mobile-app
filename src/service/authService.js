@@ -1,4 +1,4 @@
-import * as httpRequest from "~/utils/httprequest";
+import {httpRequest} from "~/utils/httprequest";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const getToken = async () => {
@@ -12,7 +12,7 @@ const getToken = async () => {
 export const login = async ({ data }) => {
   try {
     const res = await httpRequest.post(`user/login`, data);
-    return res;
+    return res.data;
   } catch (error) {
     return error;
   }
@@ -21,7 +21,7 @@ export const login = async ({ data }) => {
 export const register = async ({ data }) => {
   try {
     const res = await httpRequest.post(`user/register`, data);
-    return res;
+    return res.data;
   } catch (error) {
     return error;
   }

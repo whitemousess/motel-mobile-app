@@ -14,7 +14,6 @@ import { AuthContext } from "~/context/AuthContext";
 function Menu() {
   const { logOut } = useContext(AuthContext);
   const navigation = useNavigation();
-
   return (
     <SafeView>
       <ScrollView
@@ -27,6 +26,7 @@ function Menu() {
         >
           <Text style={styles.txtMenu}>Trang cá nhân</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.btnMenu}
           onPress={() => navigation.navigate("EditProfile")}
@@ -34,6 +34,7 @@ function Menu() {
         >
           <Text style={styles.txtMenu}>Thông tin cá nhân</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.btnMenu}
           onPress={() => navigation.navigate("PostMotel")}
@@ -41,6 +42,23 @@ function Menu() {
         >
           <Text style={styles.txtMenu}>Đăng phòng trọ</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.btnMenu}
+          onPress={() => navigation.navigate("MyMotel")}
+          activeOpacity={1}
+        >
+          <Text style={styles.txtMenu}>Phòng trọ đã đăng</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.btnMenu}
+          onPress={() => navigation.navigate("History")}
+          activeOpacity={1}
+        >
+          <Text style={styles.txtMenu}>Lịch sử thuê</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.btnMenu}
           onPress={logOut}
@@ -48,6 +66,7 @@ function Menu() {
         >
           <Text style={styles.txtMenu}>Đăng xuất</Text>
         </TouchableOpacity>
+        
       </ScrollView>
     </SafeView>
   );

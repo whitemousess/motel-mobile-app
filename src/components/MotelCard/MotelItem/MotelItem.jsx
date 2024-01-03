@@ -71,7 +71,7 @@ function MotelItem({ data, refreshing }) {
         >
           <Image
             source={{ uri: data.imageUrl[0] }}
-            style={{ width: 295, height: 295, borderRadius: 10 }}
+            style={{ width: 340, height: 340, borderRadius: 10 }}
           />
           <TouchableOpacity
             onPress={() => addFavorite(data._id)}
