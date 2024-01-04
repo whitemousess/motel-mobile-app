@@ -27,7 +27,7 @@ function InputCustom({
         marginBottom: 15,
         padding: 4,
           borderWidth: 1,
-          borderColor: "#607274",
+          borderColor: "#DDDDDD",
           borderRadius: 10,
         ...isEmpty,
       }}

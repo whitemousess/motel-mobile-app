@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { Image, RefreshControl, ScrollView, Text, View } from "react-native";
 import MotelCard from "~/components/MotelCard";
 import SafeView from "~/components/SafeView";
 
@@ -7,17 +7,34 @@ import * as motelService from "~/service/motelService";
 
 function DetailProfile({ data }) {
   const [motel, setMotel] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
+  const fetch = () => {
     motelService
       .getMotelUser({ userId: data._id })
       .then((motel) => setMotel(motel.data))
       .catch((error) => console.log(error));
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      fetch();
+    }, 1000);
+  }, [data]);
+
+  useEffect(() => {
+    fetch();
   }, [data]);
 
   return (
     <SafeView>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View
           style={{
             flexDirection: "column",
@@ -25,7 +42,7 @@ function DetailProfile({ data }) {
             borderBottomColor: "#ccc",
             borderBottomWidth: 1,
             paddingVertical: 20,
-            marginBottom: 20
+            marginBottom: 20,
           }}
         >
           {data && (

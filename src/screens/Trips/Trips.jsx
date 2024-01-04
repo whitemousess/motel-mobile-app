@@ -6,6 +6,15 @@ import * as bookedService from "~/service/bookedService";
 
 function Trips() {
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      fetch();
+    }, 1000);
+  }, []);
 
   const fetch = () => {
     bookedService
@@ -41,7 +50,14 @@ function Trips() {
       });
   };
 
-  return <ListTrips data={data} onCancel={cancel} />;
+  return (
+    <ListTrips
+      data={data}
+      onCancel={cancel}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    />
+  );
 }
 
 export default Trips;

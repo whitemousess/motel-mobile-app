@@ -22,19 +22,10 @@ function SelectProvince({ iconClear }) {
   });
 
   const onSubmit = () => {
-    if (data.province !== "" && data.district !== "") {
-      const convertData = () => {
-        if (Array.isArray(data.province)) {
-          return data.province[1];
-        } else {
-          return data.province.split(",")[1];
-        }
-      };
-      navigation.navigate("Home", {
-        selectedProvince: convertData(),
-        selectedDistrict: data.district,
-      });
-    }
+    navigation.navigate("Home", {
+      selectedProvince: data.province,
+      selectedDistrict: data.district,
+    });
     setModalVisible(false);
   };
 
@@ -44,6 +35,7 @@ function SelectProvince({ iconClear }) {
       selectedDistrict: "",
       reloadKey: Date.now(),
     });
+    setData({ province: "", district: "" });
   };
 
   useEffect(() => {
@@ -58,17 +50,14 @@ function SelectProvince({ iconClear }) {
   }, []);
 
   useEffect(() => {
-    if (data.province) {
-      const convertData = () => {
-        if (Array.isArray(data.province)) {
-          return data.province[0];
-        } else {
-          return data.province.split(",")[0];
-        }
-      };
+    const findProvince = () => {
+      return province.filter((province) => province.name === data.province);
+    };
 
+    const foundProvince = findProvince();
+    if (data.province && foundProvince.length > 0) {
       provinceService
-        .getDistrict(convertData())
+        .getDistrict(foundProvince[0]?.code)
         .then((result) => {
           setDistrict(result.districts);
         })
@@ -76,7 +65,7 @@ function SelectProvince({ iconClear }) {
           console.log(err);
         });
     }
-  }, [data.province]);
+  }, [data.province, province]);
 
   const handleSelect = (key, value) => {
     if (key === "province") {
@@ -113,7 +102,11 @@ function SelectProvince({ iconClear }) {
         <AntDesign name="search1" size={24} color="#000" />
         <View style={{ marginLeft: 10 }}>
           <Text>Địa chỉ ?</Text>
-          <Text style={{ color: "#717171" }}>Tỉnh , thành phố</Text>
+          <Text style={{ color: "#717171" }}>
+            {data.province && data.district
+              ? `${data.province + " - " + data.district}`
+              : "Tỉnh , thành phố"}
+          </Text>
         </View>
       </TouchableOpacity>
 
@@ -148,7 +141,7 @@ function SelectProvince({ iconClear }) {
             style={{
               backgroundColor: "white",
               width: "80%",
-              height: "50%",
+              height: "35%",
               borderRadius: 10,
             }}
           >
@@ -158,7 +151,13 @@ function SelectProvince({ iconClear }) {
 
             <Picker
               selectedValue={data.province}
-              itemStyle={{ height: 150 }}
+              itemStyle={{
+                height: 70,
+                borderWidth: 1,
+                borderColor: "#ccc",
+                borderRadius: 10,
+                marginBottom: 10,
+              }}
               onValueChange={(value) => handleSelect("province", value)}
             >
               <Picker.Item label="Chọn tỉnh thành" value="" />
@@ -166,14 +165,20 @@ function SelectProvince({ iconClear }) {
                 <Picker.Item
                   key={dataProvince.code}
                   label={dataProvince.name}
-                  value={[dataProvince.code, dataProvince.name]}
+                  value={dataProvince.name}
                 />
               ))}
             </Picker>
 
             <Picker
               selectedValue={data.district}
-              itemStyle={{ height: 100 }}
+              itemStyle={{
+                height: 70,
+                borderWidth: 1,
+                borderColor: "#ccc",
+                borderRadius: 10,
+                marginBottom: 10,
+              }}
               onValueChange={(value) => handleSelect("district", value)}
             >
               <Picker.Item label="Chọn quận huyện" value="" />

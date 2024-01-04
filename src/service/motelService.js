@@ -54,6 +54,20 @@ export const getMyMotel = async () => {
   }
 };
 
+export const postMotel = async ({ data }) => {
+  const token = await getToken();
+  const formData = await data;
+  try {
+    return formData;
+    //   const res = await httpRequest.post(`motel/create-motel`, formData, {
+    //     headers: { Authorization: "Bearer " + token },
+    //   });
+    //   return res;
+  } catch (error) {
+    return error.response;
+  }
+};
+
 export const deleteMotel = async ({ motelId }) => {
   const token = await getToken();
   try {

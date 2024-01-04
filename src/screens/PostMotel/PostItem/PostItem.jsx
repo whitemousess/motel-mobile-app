@@ -1,48 +1,121 @@
-import { useCallback, useEffect, useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
-import { useRoute } from "@react-navigation/native";
-import { Picker } from "@react-native-picker/picker";
+import { useEffect, useState } from "react";
 
+import {
+  Keyboard,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
+
+import UploadImage from "./UploadImage";
 import InputCustom from "~/components/InputCustom";
 import ButtonCustom from "~/components/ButtonCustom";
 import * as provinceService from "~/service/provinceService";
-import * as motelService from "~/service/motelService";
+import { httpRequest } from "~/utils/httprequest";
+import SafeView from "~/components/SafeView";
 
-function EditMotel() {
-  const route = useRoute();
-  const motelId = route?.params?.motelId;
+function PostItem() {
+  const [invalidFields, setInvalidFields] = useState({});
+  const [provinceSelect, setProvinceSelect] = useState([]);
+  const [districtSelect, setDistrictSelect] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({
     title: "",
     description: "",
     price: "",
-    type: "",
     province: "",
     district: "",
+    type: "",
+    imageUrl: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [provinceSelect, setProvinceSelect] = useState([]);
-  const [districtSelect, setDistrictSelect] = useState([]);
-  const [invalidFields, setInvalidFields] = useState({});
 
-  useEffect(() => {
-    motelService
-      .getMotelId({ motelId })
-      .then((motel) => {
-        setData(motel.data);
-      })
-      .catch((error) => console.log("Error fetching data:", error));
-  }, [motelId]);
+  const handleSelect = (key, value) => {
+    if (key === "province") {
+      if (data.province !== value) {
+        setData({ ...data, province: value, district: "" });
+      }
+    } else {
+      setData({ ...data, [key]: value });
+    }
+  };
 
   const handleChange = (key, value) => {
-    setData({ ...data, [key]: value });
-    setInvalidFields({ ...invalidFields, [key]: false });
+    if (value.trim() === "") {
+      setData({ ...data, [key]: "" });
+    } else {
+      setData({ ...data, [key]: value });
+      setInvalidFields({ ...invalidFields, [key]: false });
+    }
+  };
+
+  const handleImageUpload = (imageUrl) => {
+    setData({ ...data, imageUrl });
+  };
+
+  const handleData = async () => {
+    const token = await AsyncStorage.getItem("token");
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("province", data.province);
+    formData.append("district", data.district);
+    formData.append("type", data.type);
+    if (data.imageUrl) {
+      for (let i = 0; i < data.imageUrl.length; i++) {
+        formData.append("images", {
+          uri: data.imageUrl[i],
+          type: "image/png",
+          name: "image.png",
+        });
+      }
+    }
+
+    try {
+      await httpRequest
+        .post(`motel/create-motel`, formData, {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            Toast.show({
+              type: "success",
+              text1: "Thay đổi thành công",
+            });
+          }
+        })
+        .catch((error) => console.log(error));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!isLoading) {
+      let newInvalidFields = {};
+      Object.keys(data).forEach((key) => {
+        if (data[key] === "") {
+          newInvalidFields[key] = true;
+        }
+      });
+
+      if (Object.keys(newInvalidFields).length === 0) {
+        handleData();
+      } else {
+        setInvalidFields(newInvalidFields);
+      }
+    }
   };
 
   useEffect(() => {
@@ -76,49 +149,13 @@ function EditMotel() {
     }
   }, [data.province, provinceSelect]);
 
-  const handleSelect = (key, value) => {
-    if (key === "province") {
-      if (data.province !== value) {
-        setData({ ...data, province: value, district: "" });
-      }
-    } else {
-      setData({ ...data, [key]: value });
-    }
-  };
-
-  const handleData = () => {
-    setIsLoading(true);
-    motelService
-      .editMotel({ motelId: data._id, data: data })
-      .then((result) => {
-        setIsLoading(false);
-      })
-      .catch((error) => console.log(error));
-  };
-
-  const handleSubmit = () => {
-    if (!isLoading) {
-      let newInvalidFields = {};
-
-      Object.keys(data).forEach((key) => {
-        if (data[key] === "") {
-          newInvalidFields[key] = true;
-        }
-      });
-
-      if (Object.keys(newInvalidFields).length === 0) {
-        handleData();
-      } else {
-        setInvalidFields(newInvalidFields);
-      }
-    }
-  };
-
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <ScrollView style={styles.container}>
-        <View style={styles.contentRegister}>
-          <Text style={styles.Header}>Thay đổi thông tin</Text>
+    <SafeView showsVerticalScrollIndicator={false}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <ScrollView style={styles.contentRegister}>
+          <Text style={styles.Header}>Cho thuê phòng</Text>
+
+          <UploadImage onImageUpload={handleImageUpload} />
 
           <InputCustom
             label="Tiêu đề ..."
@@ -126,16 +163,18 @@ function EditMotel() {
             onChange={(text) => handleChange("title", text)}
             isError={invalidFields["title"]}
           />
+
           <InputCustom
             label="Mô tả ..."
             value={data.description}
             onChange={(text) => handleChange("description", text)}
             isError={invalidFields["description"]}
           />
+
           <InputCustom
             label="Giá phòng ..."
-            value={String(data.price)}
-            keyboardType="numeric"
+            value={data.price}
+            keyboardType={"numeric"}
             onChange={(text) => handleChange("price", text)}
             isError={invalidFields["price"]}
           />
@@ -199,12 +238,12 @@ function EditMotel() {
           </Picker>
 
           <ButtonCustom
+            label={isLoading ? "Đang xử lý" : "Thêm"}
             onPress={handleSubmit}
-            label={isLoading ? "Đang Thay đổi" : "Thay đổi"}
           />
-        </View>
-      </ScrollView>
-    </TouchableWithoutFeedback>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </SafeView>
   );
 }
 
@@ -227,10 +266,8 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "500",
     color: "#333",
-    paddingBottom: 30,
-    paddingTop: 30,
     textAlign: "center",
   },
 });
 
-export default EditMotel;
+export default PostItem;

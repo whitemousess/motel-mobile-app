@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { useState } from "react";
 
 import Item from "./Item";
@@ -7,7 +7,7 @@ import ClientEmpty from "~/components/ClientEmpty";
 import ModalDetail from "./ModalDetail";
 import * as bookedService from "~/service/bookedService";
 
-function ListItem({ data = [], onDelete }) {
+function ListItem({ data = [], onDelete, onRefresh, refreshing }) {
   const [isOpen, setIsOpen] = useState(false);
   const [dataDetail, setDataDetail] = useState();
 
@@ -42,17 +42,22 @@ function ListItem({ data = [], onDelete }) {
     <SafeView>
       <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
         <Text style={{ fontSize: 20, fontWeight: 500 }}>Quản lý phòng trọ</Text>
-        <View style={{ marginTop: 10 }}>
-          {data &&
-            data.map((motel) => (
-              <Item
-                data={motel}
-                key={motel._id}
-                onDelete={onDelete}
-                openModal={openModal}
-              />
-            ))}
-        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ marginTop: 10, height: "100%" }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {data.map((motel) => (
+            <Item
+              data={motel}
+              key={motel._id}
+              onDelete={onDelete}
+              openModal={openModal}
+            />
+          ))}
+        </ScrollView>
         <ModalDetail isOpen={isOpen} onClose={onClose} data={dataDetail} />
       </View>
     </SafeView>

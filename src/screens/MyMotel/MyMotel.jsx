@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import ListMotel from "./ListMotel";
 import * as motelService from "~/service/motelService";
@@ -6,6 +6,7 @@ import Toast from "react-native-toast-message";
 
 function MyMotel() {
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetch = () => {
     motelService
@@ -17,6 +18,14 @@ function MyMotel() {
         console.log(error);
       });
   };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      fetch();
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     fetch();
@@ -44,7 +53,14 @@ function MyMotel() {
       });
   };
 
-  return <ListMotel data={data} onDelete={deleteMotel} />;
+  return (
+    <ListMotel
+      data={data}
+      onDelete={deleteMotel}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    />
+  );
 }
 
 export default MyMotel;

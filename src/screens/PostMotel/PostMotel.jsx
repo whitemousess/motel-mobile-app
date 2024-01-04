@@ -1,11 +1,7 @@
-import { Text, View } from "react-native";
+import PostItem from "./PostItem";
 
 function PostMotel() {
-  return (
-    <View>
-      <Text>PostMotel</Text>
-    </View>
-  );
+  return <PostItem />;
 }
 
 export default PostMotel;
