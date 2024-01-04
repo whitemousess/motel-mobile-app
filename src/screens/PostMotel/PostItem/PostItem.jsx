@@ -113,6 +113,11 @@ function PostItem() {
       if (Object.keys(newInvalidFields).length === 0) {
         handleData();
       } else {
+        Toast.show({
+          type: "error",
+          text1: "Dữ liệu chưa đủ",
+          text2: "Vui lòng nhập thêm",
+        });
         setInvalidFields(newInvalidFields);
       }
     }

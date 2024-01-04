@@ -1,14 +1,13 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Linking, Text, TouchableOpacity, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 function TripItem({ data, onCancel }) {
   const navigation = useNavigation();
-
   const renderLeftActions = () => {
     return (
-      <View style={{ flexDirection: "row" ,marginLeft: 10 }}>
+      <View style={{ flexDirection: "row", marginLeft: 10 }}>
         <TouchableOpacity
           style={{
             flexDirection: "row",
@@ -18,7 +17,14 @@ function TripItem({ data, onCancel }) {
             backgroundColor: "#16a34a",
           }}
           activeOpacity={0.8}
-          onPress={() => {}}
+          onPress={() =>
+            navigation.navigate("PaymentScreen", {
+              BookedID: data._id,
+              amount: data.motelId.price,
+              language: "vn",
+              bankCode: "",
+            })
+          }
         >
           <AntDesign name="shoppingcart" size={24} color="white" />
         </TouchableOpacity>

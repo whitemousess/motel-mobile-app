@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome, AntDesign, Feather, Entypo } from "@expo/vector-icons";
 
 import MenuStack from "./MenuStack";
-import Trips from "~/screens/Trips";
+import TripStack from "./TripStack";
 import Wishlists from "~/screens/Wishlists";
 import MotelStack from "./MotelStack";
 
@@ -43,8 +43,8 @@ function AppStack() {
       />
 
       <Tab.Screen
-        name="Trips"
-        component={Trips}
+        name="TripStack"
+        component={TripStack}
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ color, size }) => (
