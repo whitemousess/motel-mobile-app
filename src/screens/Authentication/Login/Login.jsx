@@ -4,7 +4,6 @@ import {
   Image,
   Text,
   View,
-  SafeAreaView,
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
@@ -15,6 +14,7 @@ import Logo from "~/components/assets/LOGO.png";
 import InputCustom from "~/components/InputCustom";
 import ButtonCustom from "~/components/ButtonCustom";
 import { AuthContext } from "~/context/AuthContext";
+import SafeView from "~/components/SafeView";
 
 function Login({ navigation }) {
   const { login } = useContext(AuthContext);
@@ -48,7 +48,7 @@ function Login({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={styles.container}>
+      <SafeView style={styles.container}>
         <View style={styles.imageLogin}>
           <Image style={{ width: 100, height: 100 }} source={Logo} />
         </View>
@@ -85,15 +85,39 @@ function Login({ navigation }) {
 
           <ButtonCustom label="Đăng nhập" onPress={handleSubmit} />
         </View>
-        <View>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ForgotPassword")}
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              width: "50%",
+              paddingHorizontal: 24,
+              paddingVertical: 20,
+            }}
+          >
+            <Text style={{ textDecorationLine: "underline" }}>
+              Quên mật khẩu ?
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate("Register")}
-            style={{ alignItems: "flex-end",  marginHorizontal: 24 ,marginVertical: 20 }}
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              width: "50%",
+              paddingHorizontal: 24,
+              paddingVertical: 20,
+            }}
           >
-            <Text>Chưa có tài khoản ?</Text>
+            <Text style={{ textDecorationLine: "underline" }}>
+              Chưa có tài khoản ?
+            </Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </SafeView>
     </TouchableWithoutFeedback>
   );
 }

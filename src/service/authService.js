@@ -1,4 +1,4 @@
-import {httpRequest} from "~/utils/httprequest";
+import { httpRequest } from "~/utils/httprequest";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const getToken = async () => {
@@ -34,6 +34,24 @@ export const getUser = async ({ userId }) => {
       headers: { Authorization: "Bearer " + token },
     });
     return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const forgetPassword = async ({ email }) => {
+  try {
+    const res = await httpRequest.post(`forgot/send-code`, email);
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const resetPassword = async ({ data }) => {
+  try {
+    const res = await httpRequest.put(`forgot/reset-password`, data);
+    return res;
   } catch (error) {
     return error;
   }

@@ -1,5 +1,6 @@
-import { StatusBar, View } from "react-native";
+import { Platform, StatusBar, View } from "react-native";
 import { useEffect, useState } from "react";
+
 function SafeView({ children }) {
   const [statusBarHeight, setStatusBarHeight] = useState(0);
 
