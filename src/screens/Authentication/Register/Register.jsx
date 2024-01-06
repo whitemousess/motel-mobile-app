@@ -121,7 +121,7 @@ function Register({ navigation }) {
               label="Số điện thoại ..."
               value={data.phone}
               onChange={(text) => handleChange("phone", text)}
-              keyboardType="email-address"
+              keyboardType="numeric"
               icon={
                 <AntDesign
                   name="phone"

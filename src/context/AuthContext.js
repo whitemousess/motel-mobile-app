@@ -39,24 +39,42 @@ export const AuthProvider = ({ children }) => {
 
   const register = (data) => {
     setIsLoading(true);
-    authService
-      .register({ data })
-      .then((res) => {
-        if (res.data) {
-          Toast.show({
-            type: "success",
-            text1: "Đăng ký thành công",
-          });
-        } else if (res.response.status === 409) {
-          Toast.show({
-            type: "error",
-            text1: "không thể đăng ký",
-            text2: "Tài khoản đã tồn tại",
-          });
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => console.log(err));
+    const validateEmail = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+    if (validateEmail(data.email)) {
+      authService
+        .register({ data })
+        .then((res) => {
+          if (res.data) {
+            Toast.show({
+              type: "success",
+              text1: "Đăng ký thành công",
+            });
+          } else if (res.response.data.error.keyPattern.username) {
+            Toast.show({
+              type: "error",
+              text1: "không thể đăng ký",
+              text2: "Tài khoản đã tồn tại",
+            });
+          } else if (res.response.data.error.keyPattern.email) {
+            Toast.show({
+              type: "error",
+              text1: "không thể đăng ký",
+              text2: "Email đã tồn tại",
+            });
+          }
+          setIsLoading(false);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Email không hợp lệ",
+        text2: "Vui lòng nhập đúng email",
+      });
+    }
   };
 
   const logOut = () => {

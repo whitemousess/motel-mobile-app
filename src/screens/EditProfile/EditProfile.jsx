@@ -53,37 +53,49 @@ function User() {
 
   const handleData = async () => {
     setIsLoading(true);
-    const token = await AsyncStorage.getItem("token");
-    const formData = new FormData();
-    formData.append("password", data.password);
-    formData.append("fullName", data.fullName);
-    formData.append("email", data.email);
-    formData.append("address", data.address);
-    formData.append("phone", data.phone);
-    formData.append("imageUrl", {
-      uri: data.imageUrl,
-      type: "image/png", // Change to the actual image type
-      name: "image.png", // Change to the actual image file name
-    });
+    const validateEmail = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+    if (validateEmail(data.email)) {
+      const token = await AsyncStorage.getItem("token");
+      const formData = new FormData();
+      formData.append("password", data.password);
+      formData.append("fullName", data.fullName);
+      formData.append("email", data.email);
+      formData.append("address", data.address);
+      formData.append("phone", data.phone);
+      formData.append("imageUrl", {
+        uri: data.imageUrl,
+        type: "image/png",
+        name: "image.png",
+      });
 
-    await httpRequest
-      .put(`user/edit`, formData, {
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        if (res.status == 200) {
-          Toast.show({
-            type: "success",
-            text1: "Thay đổi thành công",
-          });
-          AsyncStorage.setItem("currentUser", JSON.stringify(res.data.data));
-        }
-        setIsLoading(false);
-      })
-      .catch((error) => console.log(error));
+      await httpRequest
+        .put(`user/edit`, formData, {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            Toast.show({
+              type: "success",
+              text1: "Thay đổi thành công",
+            });
+            AsyncStorage.setItem("currentUser", JSON.stringify(res.data.data));
+          }
+          setIsLoading(false);
+        })
+        .catch((error) => console.log(error));
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Email không hợp lệ",
+        text2: "Vui lòng nhập đúng email",
+      });
+    }
   };
 
   const handleSubmit = () => {

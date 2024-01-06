@@ -140,7 +140,7 @@ function ForgotPassword() {
             />
             <TouchableOpacity
               onPress={() => {
-                second === 1 && handleSubmitForget();
+                second === 1 && fetchForgot();
               }}
               style={{
                 paddingVertical: 10,
